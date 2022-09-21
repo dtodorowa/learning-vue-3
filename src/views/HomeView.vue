@@ -1,7 +1,7 @@
 
 <template class="home">
   <div>
-  <h2>{{ appTitle }}</h2>
+  <h2 ref="appTitleRef">{{ appTitle }}</h2>
   <h3>{{ counterData.title }}:</h3>
     <div>
       <button @click="decreaseCounter(2)" class="btn">--</button>
@@ -15,15 +15,22 @@
 
     <div class="edit">
       <h4>Edit counter title:</h4>
-      <input v-model="counterData.title" type="text"/>
+      <input v-model="counterData.title" type="text" v-autofocus/>
     </div>
   </div>
 </template>
 
 <script setup>
-  import { reactive, computed, watch,onBeforeMount,onMounted,onBeforeUnmount,onUnmounted, onActivated, onDeactivated } from 'vue';
+import { reactive, computed, watch, onMounted, ref, nextTick} from 'vue';
+import {vAutofocus} from '../directives/vAutofocus'
 
   const appTitle = 'My Amazing Counter App'
+
+  const appTitleRef = ref(null);
+
+  onMounted(() => {
+    console.log(`The app title is ${appTitleRef.value.offsetWidth} px wide`)
+  })
 
   const counterData = reactive({
     count: 0,
@@ -39,38 +46,22 @@
     return 'odd'
   })
 
-  const increaseCounter = (amount, e) => {
+  const increaseCounter = async (amount, e) => {
     counterData.count += amount;
+    await nextTick(() => {
+	    console.log("do something when counter has updated")
+  })
   }
 
   const decreaseCounter = amount => {
     counterData.count -= amount;
   }
 
-  onBeforeMount(() => {
-    //before the component is mounted
-  })
-
   onMounted(() => {
-
+    console.log('Do Stuff to counter')
   })
 
-  onBeforeUnmount(() => {
 
-  })
-
-  onUnmounted(() => {
-    
-  })
-
-  onActivated(() => {
-    //only fired if the component is kept alive  
-  })
-  
-  onDeactivated(() => {
-    //only fired if the component is kept alive  
-
-  })
 
 </script>
 
